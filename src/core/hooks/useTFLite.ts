@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import {
   getTFLiteModelFileName,
-  SegmentationConfig,
+  SegmentationConfig
 } from '../helpers/segmentationHelper'
 
 declare function createTFLiteModule(): Promise<TFLite>
