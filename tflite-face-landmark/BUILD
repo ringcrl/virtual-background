@@ -18,10 +18,11 @@ cc_binary(
     "@org_tensorflow//tensorflow/lite:framework",
     "@org_tensorflow//tensorflow/lite:tflite_with_xnnpack",
     "@org_tensorflow//tensorflow/lite/kernels:builtin_ops",
-    "@org_mediapipe//mediapipe/calculators/util:landmarks_smoothing_calculator"
+    "@org_mediapipe//mediapipe/util/tflite/operations:transform_landmarks",
   ],
 )
 
+# TODO: 非 simd 完成后配置这里
 cc_binary(
   name = "tflite-simd-face-landmark",
   srcs = ["face-landmark.cc"],

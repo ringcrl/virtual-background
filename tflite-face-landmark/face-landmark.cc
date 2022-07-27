@@ -2,7 +2,7 @@
 #include <emscripten.h>
 #include "tensorflow/lite/kernels/register.h"
 #include "tensorflow/lite/model.h"
-// #include "mediapipe/util/tflite/operations/transpose_conv_bias.h"
+#include "mediapipe/util/tflite/operations/transform_landmarks.h"
 
 #define CHECK_TFLITE_ERROR(x)                                \
   if (!(x)) {                                                \
@@ -64,24 +64,24 @@ EMSCRIPTEN_KEEPALIVE
 int loadModel(int bufferSize) {
   // printf("[WASM] Loading model of size: %d\n", bufferSize);
 
-  // // Load model
-  // std::unique_ptr<tflite::FlatBufferModel> model =
-  //   tflite::FlatBufferModel::BuildFromBuffer(modelBuffer, bufferSize);
-  // CHECK_TFLITE_ERROR(model != nullptr);
+  // Load model
+  std::unique_ptr<tflite::FlatBufferModel> model =
+    tflite::FlatBufferModel::BuildFromBuffer(modelBuffer, bufferSize);
+  CHECK_TFLITE_ERROR(model != nullptr);
 
-  // // Build the interpreter with the InterpreterBuilder.
-  // // Note: all Interpreters should be built with the InterpreterBuilder,
-  // // which allocates memory for the Interpreter and does various set up
-  // // tasks so that the Interpreter can read the provided model.
-  // tflite::ops::builtin::BuiltinOpResolver resolver;
-  // resolver.AddCustom("Convolution2DTransposeBias",
-  //   mediapipe::tflite_operations::RegisterConvolution2DTransposeBias());
-  // tflite::InterpreterBuilder builder(*model, resolver);
-  // builder(&interpreter);
-  // CHECK_TFLITE_ERROR(interpreter != nullptr);
+  // Build the interpreter with the InterpreterBuilder.
+  // Note: all Interpreters should be built with the InterpreterBuilder,
+  // which allocates memory for the Interpreter and does various set up
+  // tasks so that the Interpreter can read the provided model.
+  tflite::ops::builtin::BuiltinOpResolver resolver;
+  resolver.AddCustom("TransformLandmarksV2",
+    mediapipe::tflite_operations::RegisterTransformLandmarksV2());
+  tflite::InterpreterBuilder builder(*model, resolver);
+  builder(&interpreter);
+  CHECK_TFLITE_ERROR(interpreter != nullptr);
 
-  // // Allocate tensor buffers.
-  // CHECK_TFLITE_ERROR(interpreter->AllocateTensors() == kTfLiteOk);
+  // Allocate tensor buffers.
+  CHECK_TFLITE_ERROR(interpreter->AllocateTensors() == kTfLiteOk);
 
   return 0;
 }

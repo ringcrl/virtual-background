@@ -10,6 +10,12 @@ common --copt="-Wno-error=unused-but-set-variable"
 # Deprecated SIMD functions in gemmlowp
 common --copt="-Wno-error=deprecated-declarations"
 
+# mediapipe/framework/deps/safe_int.h
+common --copt="-Wno-error=implicit-const-int-float-conversion"
+
+# mediapipe/gpu/gl_texture_buffer.h
+common --copt="-Wno-error=inconsistent-missing-override"
+
 # Mediapipe custom operators are not public
 common --check_visibility=false
 
