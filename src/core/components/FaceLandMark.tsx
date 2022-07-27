@@ -7,6 +7,8 @@ import { PostProcessingConfig } from '../helpers/postProcessingHelper'
 import { SegmentationConfig } from '../helpers/segmentationHelper'
 import { SourceConfig, SourcePlayback } from '../helpers/sourceHelper'
 import { TFLite } from '../hooks/useTFLite'
+import OutputViewer from './OutputViewer'
+import SourceViewer from './SourceViewer'
 
 type FaceLandMarkProps = {
   sourceConfig: SourceConfig
@@ -27,12 +29,11 @@ function FaceLandMark(props: FaceLandMarkProps) {
 
   return (
     <Paper className={classes.root}>
-      TODO: FaceLandMark
-      {/* <SourceViewer
+      <SourceViewer
         sourceConfig={props.sourceConfig}
         onLoad={setSourcePlayback}
       />
-      {sourcePlayback && props.bodyPix && props.tflite ? (
+      {sourcePlayback && props.bodyPix && props.tflite && (
         <OutputViewer
           sourcePlayback={sourcePlayback}
           backgroundConfig={props.backgroundConfig}
@@ -41,11 +42,7 @@ function FaceLandMark(props: FaceLandMarkProps) {
           bodyPix={props.bodyPix}
           tflite={props.tflite}
         />
-      ) : (
-        <div className={classes.noOutput}>
-          <Avatar className={classes.avatar} />
-        </div>
-      )} */}
+      )}
     </Paper>
   )
 }
