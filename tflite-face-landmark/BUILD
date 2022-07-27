@@ -18,7 +18,7 @@ cc_binary(
     "@org_tensorflow//tensorflow/lite:framework",
     "@org_tensorflow//tensorflow/lite:tflite_with_xnnpack",
     "@org_tensorflow//tensorflow/lite/kernels:builtin_ops",
-    "@org_mediapipe//mediapipe/util/tflite/operations:transpose_conv_bias",
+    "@org_mediapipe//mediapipe/calculators/util:landmarks_smoothing_calculator"
   ],
 )
 
