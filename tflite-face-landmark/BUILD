@@ -18,7 +18,24 @@ cc_binary(
     "@org_tensorflow//tensorflow/lite:framework",
     "@org_tensorflow//tensorflow/lite:tflite_with_xnnpack",
     "@org_tensorflow//tensorflow/lite/kernels:builtin_ops",
-    "@org_mediapipe//mediapipe/util/tflite/operations:transform_landmarks",
+
+    # /mediapipe_src/mediapipe/examples/desktop/BUILD:demo_run_graph_main
+    "@org_mediapipe//mediapipe/framework:calculator_framework",
+    "@org_mediapipe//mediapipe/framework/formats:image_frame",
+    "@org_mediapipe//mediapipe/framework/port:file_helpers",
+    "@org_mediapipe//mediapipe/framework/port:parse_text_proto",
+    "@org_mediapipe//mediapipe/framework/port:status",
+    "@com_google_absl//absl/flags:flag",
+    "@com_google_absl//absl/flags:parse",
+    # /mediapipe_src/mediapipe/examples/desktop/BUILD:demo_run_graph_main_gpu 额外字段
+    # "@org_mediapipe//mediapipe/gpu:gl_calculator_helper",
+    # "@org_mediapipe//mediapipe/gpu:gpu_buffer",
+    # "@org_mediapipe//mediapipe/gpu:gpu_shared_data_internal",
+    
+    # /mediapipe_src/mediapipe/graphs/face_mesh/BUILD:mobile_calculators
+    # "@org_mediapipe//mediapipe/calculators/core:flow_limiter_calculator",
+    # "@org_mediapipe//mediapipe/graphs/face_mesh/subgraphs:face_renderer_gpu",
+    # "@org_mediapipe//mediapipe/modules/face_landmark:face_landmark_front_gpu",
   ],
 )
 

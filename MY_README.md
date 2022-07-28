@@ -21,28 +21,47 @@ docker run -it -v $PWD:/workspace -w /workspace tflite-face-landmark
 # 进入工作区
 cd /workspace
 
-# 拉取 TensorFlow 与 Mediapipe 最新代码
+# tensorflow_src
 git -C /tensorflow_src pull --rebase
+# 迁出到指定 commit 
+git -C /tensorflow_src checkout a3419ac
+# 应用修改补丁
+git -C /tensorflow_src apply /mediapipe_src/third_party/org_tensorflow_compatibility_fixes.diff
+git -C /tensorflow_src apply /mediapipe_src/third_party/org_tensorflow_custom_ops.diff
+
+# mediapipe_src
 git -C /mediapipe_src pull --rebase
+# 应用修改补丁
+TODO:
 
 # 修改 tensorflow/BUILD 配置
 sed -i 's/"crosstool_top": "\/\/external:android\/emscripten"/"crosstool_top": "@emsdk\/\/emscripten_toolchain:everything"/' /tensorflow_src/tensorflow/BUILD
 
 # 进入编译 wasm 工作区
-cd workspace/tflite-face-landmark
+cd /workspace/tflite-face-landmark
 
 # 清除编译缓存
 bazel clean --expunge
 
 # 编译 tflite
-bazel build --config=wasm --verbose_failures -c opt :tflite-face-landmark
+bazel build --define MEDIAPIPE_DISABLE_OPENCV=1 --config=wasm --verbose_failures -c opt :tflite-face-landmark
 # 编译产物从 docker container 移动到主项目
 tar xvf bazel-bin/tflite-face-landmark -C ../public/tflite-face-landmark
 
 # 编译 tflite simd
-bazel build --config=wasm --features=wasm_simd -c opt :tflite-simd-face-landmark
-# 编译产物从 docker container 移动到主项目
-tar xvf bazel-bin/tflite-simd-face-landmark -C ../public/tflite-face-landmark
+TODO: 
+```
+
+## 保存与还原 git 修改记录
+
+```sh
+cd /mediapipe_src
+
+# 保存修改记录
+git diff > /workspace/diff/mediapipe_src.patch
+
+# 还原修改记录
+git apply /workspace/diff/mediapipe_src.patch
 ```
 
 ## C++ 构建
@@ -50,13 +69,26 @@ tar xvf bazel-bin/tflite-simd-face-landmark -C ../public/tflite-face-landmark
 ```sh
 # VSC docker attach
 
-cd mediapipe_src/
+# opencv 依赖安装
+apt-get install libopencv-core-dev libopencv-highgui-dev libopencv-calib3d-dev libopencv-features2d-dev libopencv-imgproc-dev libopencv-video-dev libopencv-contrib-dev
+
+cd /mediapipe_src
 export GLOG_logtostderr=1
+
+# hello_world
 # Need bazel flag 'MEDIAPIPE_DISABLE_GPU=1' as desktop GPU is not supported currently.
-bazel run --define MEDIAPIPE_DISABLE_GPU=1 \
-    mediapipe/examples/desktop/hello_world:hello_world
+bazel build --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/examples/desktop/hello_world:hello_world
+
+# face_mesh
+bazel build --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/examples/desktop/face_mesh:face_mesh_cpu
+# 运行构建产物
+GLOG_logtostderr=1 bazel-bin/mediapipe/examples/desktop/face_mesh/face_mesh_cpu \
+    --calculator_graph_config_file=mediapipe/graphs/face_mesh/face_mesh_desktop_live.pbtxt \
+    --input_video_path="/workspace/public/videos/Dance - 32938.mp4" \
+    --output_video_path=/output.mp4
 ```
 
 ## FAQ
 
 - [docker-error-failed-to-register-layer-symlink](https://stackoverflow.com/questions/44942790/docker-error-failed-to-register-layer-symlink)
+- [./mediapipe/framework/port/opencv_core_inc.h:18:10: fatal error: opencv2/core/version.hpp: No such file or directory](https://github.com/google/mediapipe/issues/496)

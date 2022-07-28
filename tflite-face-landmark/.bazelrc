@@ -16,6 +16,9 @@ common --copt="-Wno-error=implicit-const-int-float-conversion"
 # mediapipe/gpu/gl_texture_buffer.h
 common --copt="-Wno-error=inconsistent-missing-override"
 
+# external/com_google_absl/absl/functional/function_ref.h
+common --copt="-Wno-error=deprecated-copy"
+
 # Mediapipe custom operators are not public
 common --check_visibility=false
 
