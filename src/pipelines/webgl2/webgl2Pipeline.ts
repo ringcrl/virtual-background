@@ -2,18 +2,18 @@ import { BackgroundConfig } from '../../core/helpers/backgroundHelper'
 import { PostProcessingConfig } from '../../core/helpers/postProcessingHelper'
 import {
   inputResolutions,
-  SegmentationConfig,
+  SegmentationConfig
 } from '../../core/helpers/segmentationHelper'
 import { SourcePlayback } from '../../core/helpers/sourceHelper'
 import { TFLite } from '../../core/hooks/useTFLite'
 import { compileShader, createTexture, glsl } from '../helpers/webglHelper'
 import {
   BackgroundBlurStage,
-  buildBackgroundBlurStage,
+  buildBackgroundBlurStage
 } from './backgroundBlurStage'
 import {
   BackgroundImageStage,
-  buildBackgroundImageStage,
+  buildBackgroundImageStage
 } from './backgroundImageStage'
 import { buildJointBilateralFilterStage } from './jointBilateralFilterStage'
 import { buildLoadSegmentationStage } from './loadSegmentationStage'
@@ -106,23 +106,23 @@ export function buildWebGL2Pipeline(
   const loadSegmentationStage =
     segmentationConfig.model === 'meet'
       ? buildSoftmaxStage(
-          gl,
-          vertexShader,
-          positionBuffer,
-          texCoordBuffer,
-          segmentationConfig,
-          tflite,
-          segmentationTexture
-        )
+        gl,
+        vertexShader,
+        positionBuffer,
+        texCoordBuffer,
+        segmentationConfig,
+        tflite,
+        segmentationTexture
+      )
       : buildLoadSegmentationStage(
-          gl,
-          vertexShader,
-          positionBuffer,
-          texCoordBuffer,
-          segmentationConfig,
-          tflite,
-          segmentationTexture
-        )
+        gl,
+        vertexShader,
+        positionBuffer,
+        texCoordBuffer,
+        segmentationConfig,
+        tflite,
+        segmentationTexture
+      )
   const jointBilateralFilterStage = buildJointBilateralFilterStage(
     gl,
     vertexShader,
@@ -136,21 +136,21 @@ export function buildWebGL2Pipeline(
   const backgroundStage =
     backgroundConfig.type === 'blur'
       ? buildBackgroundBlurStage(
-          gl,
-          vertexShader,
-          positionBuffer,
-          texCoordBuffer,
-          personMaskTexture,
-          canvas
-        )
+        gl,
+        vertexShader,
+        positionBuffer,
+        texCoordBuffer,
+        personMaskTexture,
+        canvas
+      )
       : buildBackgroundImageStage(
-          gl,
-          positionBuffer,
-          texCoordBuffer,
-          personMaskTexture,
-          backgroundImage,
-          canvas
-        )
+        gl,
+        positionBuffer,
+        texCoordBuffer,
+        personMaskTexture,
+        backgroundImage,
+        canvas
+      )
 
   async function render() {
     gl.clearColor(0, 0, 0, 0)
